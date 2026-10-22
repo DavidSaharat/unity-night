@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "headers": [
+      {
+        "source": "**/*.@(js|css|html)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  },
+  "auth": {
+    "providers": {
+      "emailPassword": true
+    }
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "database": "(default)",
+    "location": "asia-southeast1"
+  }
+}

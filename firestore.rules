@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function isAdmin() {
+      return request.auth != null && exists(/databases/$(db)/documents/admins/$(request.auth.uid));
+    }
+
+    // ตัวนับ: ใครก็เพิ่มได้ทีละ 1 เท่านั้น ส่วนแอดมินตั้งค่าอะไรก็ได้ (เช่น reset)
+    match /stats/count {
+      allow read: if true;
+      allow create: if request.resource.data.n == 1 || isAdmin();
+      allow update: if request.resource.data.n == resource.data.n + 1 || request.resource.data.n == resource.data.n || isAdmin();
+    }
+
+    // สถานะดาวแต่ละดวง: ใครสร้างได้ (เริ่มที่ start) และเปลี่ยนได้เฉพาะ state/at ของเอกสารที่ตัวเองมี id (สุ่ม 20 ตัว) ส่วนลบเฉพาะแอดมิน
+    match /stars/{id} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasOnly(['n', 'mode', 'state', 'at']) && request.resource.data.state == 'start' && request.resource.data.n is int;
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['state', 'at'])
+        && request.resource.data.state in ['water', 'gather', 'star', 'rising', 'gone'];
+      allow delete: if isAdmin();
+    }
+
+    match /site/config {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // คนแรกที่ล็อกอินกด "ตั้งตัวเองเป็นแอดมิน" จะได้สิทธิ์ (เขียน admins/uid + meta/admin พร้อมกัน) หลังจากนั้นล็อก
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null && request.auth.uid == uid && !exists(/databases/$(db)/documents/meta/admin);
+    }
+    match /meta/admin {
+      allow create: if request.auth != null && !exists(/databases/$(db)/documents/meta/admin);
+    }
+  }
+}

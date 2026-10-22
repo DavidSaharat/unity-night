@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#150f3d">
+  <title>ส่งความรู้สึกขึ้นฟ้า · ตัวอักษรเป็นดาว</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="loading" data-mode="letters">
+  <div id="cam"></div>
+  <canvas id="sky"></canvas>
+  <canvas id="fx"></canvas>
+
+  <main>
+    <section class="stage on" id="st-write">
+      <img class="logo" alt="" hidden>
+      <h2 class="write-title" id="writeTitle"></h2>
+      <div class="paper" id="paper">
+        <textarea id="msg" rows="6" autocomplete="off" spellcheck="false"></textarea>
+        <div class="count" id="count"></div>
+        <button class="handle" id="handle" type="button">
+          <svg class="chev c1" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="chev c2" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span id="hint"></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="stage" id="st-wait">
+      <p class="wait-text" id="waitText"></p>
+      <div class="dots"><i></i><i></i><i></i></div>
+    </section>
+
+    <section class="stage" id="st-finish">
+      <img class="logo" alt="" hidden>
+      <h1 class="finish-text" id="finishText"></h1>
+    </section>
+  </main>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

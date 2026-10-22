@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Admin · ส่งความรู้สึกขึ้นฟ้า</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+  <header>
+    <h1>✦ Admin</h1>
+    <div><span id="who"></span> <button id="logout" class="btn" hidden>ออกจากระบบ</button></div>
+  </header>
+
+  <main>
+    <section class="card counter">
+      <div class="label">จำนวนดาวที่ส่ง</div>
+      <div class="big"><span id="count">0</span>/<span id="max">80</span></div>
+      <div class="bar"><i id="bar"></i></div>
+    </section>
+
+    <section class="card" id="monitor" hidden>
+      <h2>สถานะดาวแต่ละดวง</h2>
+      <div id="summary" class="chips"></div>
+      <div id="stars"></div>
+    </section>
+
+    <section class="card" id="gate" hidden>
+      <p id="gateMsg"></p>
+      <form id="login" hidden>
+        <input id="email" type="email" placeholder="อีเมล" autocomplete="username" required>
+        <input id="pass" type="password" placeholder="รหัสผ่าน (อย่างน้อย 6 ตัว)" autocomplete="current-password" required>
+        <div class="row">
+          <button class="btn primary" type="submit">เข้าสู่ระบบ</button>
+          <button class="btn" type="button" id="signup">สร้างบัญชี</button>
+        </div>
+      </form>
+      <button class="btn primary" id="claim" hidden>ตั้งตัวเองเป็นแอดมิน</button>
+    </section>
+
+    <div id="editor" hidden>
+      <div id="form"></div>
+    </div>
+  </main>
+
+  <footer id="bar-actions" hidden>
+    <button class="btn primary" id="save">บันทึก</button>
+    <button class="btn" id="defaults">คืนค่าเริ่มต้น (ยังไม่บันทึก)</button>
+    <button class="btn danger" id="reset">รีเซ็ตตัวนับเป็น 0</button>
+    <a class="btn" href="/" target="_blank">ดูหน้าจริง</a>
+    <a class="btn" href="/letters" target="_blank">ดูหน้า /letters</a>
+    <span id="toast"></span>
+  </footer>
+
+  <script type="module" src="/admin.js"></script>
+</body>
+</html>
