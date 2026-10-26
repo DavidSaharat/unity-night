@@ -2,7 +2,7 @@
 const TAU = Math.PI * 2;
 const rand = (a, b) => a + Math.random() * (b - a);
 const easeInOut = (p) => (p < 0.5 ? 2 * p * p : 1 - 2 * (1 - p) ** 2);
-const DASH = 0.55; // วินาที: ช่วงพุ่งไวทะลุจอ
+const DASH = 0.6; // วินาที: ช่วงพุ่งไวทะลุจอ
 const DRIFT = 70; // px: ระยะที่ดาวลอยขึ้นช้าๆ ก่อนพุ่ง
 const SWAY = 36; // px: ดาวเลี้ยวซ้ายแล้วขวาระหว่างลอยช้า (กลับมาตรงกลางก่อนพุ่ง)
 // p 0→1: ซ้าย → ขวา → กลับกลาง พร้อมเอียงตัวตามทิศที่เลี้ยว
@@ -171,7 +171,7 @@ export class Sky {
       sx = sy = 1 - 0.12 * easeInOut((t - r.hold) / charge);
     } else {
       if (!r.launched) { r.launched = true; r.yDash = r.y; r.onLaunch?.(); r.onImpact?.(); }
-      const p = Math.min(1, (t - tDash) / dash), e = p ** 2.2;
+      const p = Math.min(1, (t - tDash) / dash), e = p;
       r.y = r.yDash - e * (r.yDash + r.R * 4);
       sy = 1 + 0.4 * p;
       sx = 1 / Math.sqrt(sy);
@@ -206,7 +206,7 @@ export class Sky {
       r.x = r.x0;
       mark("rising", tDash);
       if (!r.launched) { r.launched = true; r.yDash = r.y; r.onLaunch?.(); r.onImpact?.(); }
-      const p = Math.min(1, (u - tDash) / DASH), e = p ** 2.2;
+      const p = Math.min(1, (u - tDash) / DASH), e = p;
       r.y = lerp(r.yDash, r.endY, e);
       k = 1 - 0.3 * e;
       sy = 1 + 0.3 * p;

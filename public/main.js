@@ -26,10 +26,9 @@ const impact = () => {
   );
   const cam = $("#cam");
   if (cam) {
-    // เลื่อนภาพลงตรงๆ จนโลโก้ (กลางโลโก้อยู่ที่ 25.5% ของภาพ) มาอยู่ที่ 35% ของจอ แต่ไม่เกินขอบบนของภาพ
-    const r = cam.getBoundingClientRect();
-    const dy = Math.min(-r.top, innerHeight * 0.35 - (r.top + 0.255 * r.height));
-    cam.animate([{ transform: "none" }, { transform: `translate(0, ${dy}px)` }], { duration: 1400, easing: "cubic-bezier(.3,0,.2,1)", fill: "forwards" });
+    // เลื่อนภาพลงตรงๆ จนสุดขอบบนของภาพ
+    const dy = -cam.getBoundingClientRect().top;
+    cam.animate([{ transform: "none" }, { transform: `translate(0, ${dy}px)` }], { duration: 500, easing: "cubic-bezier(.2,.2,.8,.8)", fill: "forwards" });
   }
 };
 const sky = new Sky($("#sky"));
@@ -57,7 +56,7 @@ $("#hint").textContent = TEXT.swipeHint;
 msg.placeholder = TEXT.placeholder;
 msg.maxLength = cfg.limits.maxLength;
 updateCount();
-paper.animate(
+const introPaper = () => paper.animate(
   [
     { transform: "translateY(70px) scale(.96) rotate(5deg)", opacity: 0 },
     { transform: `translateY(0) scale(1) rotate(${REST.r}deg)`, opacity: 1 },
@@ -251,21 +250,36 @@ function buildChars(el, text, start) {
   return i;
 }
 
-function enterFinish() {
-  state = "finish";
+// วางข้อความทีละตัวอักษรใน box แล้วย่อฟอนต์ให้แต่ละบรรทัดพอดีหน้าจอ (ไม่ตกบรรทัด)
+function renderText(box, text, fontSize, fit = true) {
   let i = 0;
-  TEXT.finishText.split("\n").forEach((line) => {
+  text.split("\n").forEach((line) => {
     const d = document.createElement("span");
     d.className = "fl";
-    $("#finishText").append(d);
+    box.append(d);
     i = buildChars(d, line.trim(), i);
   });
-
-  // ย่อฟอนต์ให้แต่ละบรรทัดพอดีหน้าจอ (ไม่ตกบรรทัด) — มือถือจึงได้ตามจำนวนบรรทัดที่ตั้งไว้
-  const box = $("#finishText"), avail = innerWidth * 0.92;
-  let size = Math.min(cfg.font.finish, innerWidth * 0.11);
+  const avail = innerWidth * 0.92, size = fontSize;
   box.style.fontSize = size + "px";
   const widest = Math.max(...[...box.children].map((l) => l.scrollWidth));
-  if (widest > avail) box.style.fontSize = (size * avail) / widest + "px";
-  show("finish");
+  if (fit && widest > avail) box.style.fontSize = (size * avail) / widest + "px";
 }
+
+function enterFinish() {
+  state = "finish";
+  show("finish");
+  renderText($("#finishText"), TEXT.finishText, cfg.font.finish);
+}
+
+/* ---------------- ต้อนรับ ---------------- */
+let welcomed = false;
+const welcome = () => {
+  if (welcomed) return;
+  welcomed = true;
+  show("write");
+  introPaper();
+};
+show("welcome");
+renderText($("#welcomeText"), TEXT.welcomeText, cfg.font.welcome, false); // ข้อความต้อนรับ: ขนาดตามที่ตั้ง ตกบรรทัดตามคำถ้ายาว
+$("#st-welcome").onclick = welcome;
+setTimeout(welcome, 3200);

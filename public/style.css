@@ -1,3 +1,4 @@
+@font-face { font-family: "PSL036pro"; src: url(/fonts/PSL036pro.ttf) format("truetype"); font-weight: 100 900; font-display: swap; }
 :root {
   --sky-top: #150f3d;
   --sky-bottom: #6a4c93;
@@ -9,6 +10,7 @@
   --title-size: 22;
   --body-size: 21;
   --wait-size: 19;
+  --hint-size: 15;
   --finish-size: 56;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -35,7 +37,7 @@ body {
 
 /* ---------- Write ---------- */
 .write-title {
-  font-size: min(calc(var(--title-size) * 1px), 6.2vw); font-weight: 600; text-align: center; max-width: 420px; line-height: 1.5;
+  font-size: calc(var(--title-size) * 1px); font-weight: 600; text-align: center; max-width: 420px; line-height: 1.5;
   text-shadow: 0 2px 10px rgba(0, 0, 0, .3); transition: opacity .5s;
 }
 .logo { width: min(72vw, var(--logo-w, 340px)); max-height: 22dvh; object-fit: contain; filter: drop-shadow(0 4px 22px rgba(90, 140, 255, .55)); transition: opacity .5s; }
@@ -82,13 +84,15 @@ body {
   width: calc(100% + 36px); margin: 4px -18px 0; padding: 8px 0 14px; border: 0;
   border-radius: 0 0 18px 18px;
   background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent) 45%, transparent));
-  color: var(--ink); font: inherit; font-weight: 600; font-size: 15px;
+  color: var(--ink); font: inherit; font-weight: 600; font-size: calc(var(--hint-size) * 1px);
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
 }
 .handle:active { cursor: grabbing; }
 .chev { animation: nudge 1.3s ease-in-out infinite; margin-bottom: -12px; }
-.chev.c2 { animation-delay: .18s; }
-.chev.c1 { opacity: .5; }
+.chev.c3 { animation-delay: .1s; }
+.chev.c2 { animation-delay: .2s; opacity: .7; }
+.chev.c1 { animation-delay: .3s; opacity: .45; }
+.chev.c0 { animation-delay: .4s; opacity: .25; }
 @keyframes nudge { 0%, 100% { transform: translateY(2px); opacity: .25; } 50% { transform: translateY(-5px); opacity: 1; } }
 .paper.empty .handle { opacity: .55; }
 .paper.hintflash #hint { color: #d6336c; }
@@ -109,7 +113,7 @@ body {
 
 /* ---------- Finish ---------- */
 .finish-text {
-  font-size: min(calc(var(--finish-size) * 1px), 11vw); font-weight: 700; text-align: center; line-height: 1.5; max-width: 92vw;
+  font-size: calc(var(--finish-size) * 1px); font-weight: 700; text-align: center; line-height: 1.5; max-width: 92vw;
   text-shadow: 0 0 26px color-mix(in srgb, var(--accent) 70%, transparent), 0 4px 0 rgba(0, 0, 0, .2);
 }
 .finish-text .fl { display: block; white-space: nowrap; }
@@ -135,4 +139,17 @@ body.loading { opacity: 0; }
 body[data-mode="letters"] { background: #050d2b; }
 /* ภาพจัตุรัส ขนาด --S จัดให้เงาวัดอยู่ซ้ายล่างตำแหน่งเดิมบนมือถือ (ภาพยื่นขึ้นไปเหนือจอ ให้กล้องเลื่อนลงตามดาวได้ยาว)
    ซ้าย -20.6% / ล่าง -2.1% ของขนาดภาพ; 126vw กันภาพไม่เต็มขอบขวาบนจอกว้าง */
-#cam { --S: min(259vw, 294vh); position: fixed; width: var(--S); height: calc(var(--S) * 1.2495); left: calc(50vw - var(--S) * 0.2875); bottom: calc(35.4vh - var(--S) * 0.3474); z-index: -1; pointer-events: none; background: url(/bg-night.jpg) center / 100% 100% no-repeat; }
+#cam { will-change: transform; --S: min(259vw, 294vh); position: fixed; width: var(--S); height: calc(var(--S) * var(--bg-ratio)); left: calc(50vw - var(--S) * var(--bg-x)); bottom: calc(35.4vh - var(--S) * var(--bg-ratio) * (1 - var(--bg-y))); z-index: -1; pointer-events: none; background: var(--bg) center / 100% 100% no-repeat; }
+
+/* ---------- Welcome ---------- */
+#st-welcome { justify-content: flex-start; padding-top: 24dvh; }
+#welcomeText { text-shadow: 0 0 18px rgba(0, 0, 0, .75), 0 2px 6px rgba(0, 0, 0, .8), 0 0 26px color-mix(in srgb, var(--accent) 60%, transparent); }
+#welcomeText .fl { white-space: normal; }
+
+/* โลโก้งานวางทับพื้นหลังที่ตำแหน่งคงที่ ไม่ว่ารูปพื้นหลังจะเป็นรูปไหน (วัดจากรูปเดิม: กว้าง 0.343·S, ห่างขอบบน 0.0808·S, กลางโลโก้อยู่ที่ --bg-x) */
+#cam::after {
+  content: ""; position: absolute;
+  left: calc(var(--S) * (var(--bg-x) - 0.1715)); top: calc(var(--S) * 0.0808);
+  width: calc(var(--S) * 0.343); height: calc(var(--S) * 0.1216);
+  background: url(/logo-main.png) center / 100% 100% no-repeat;
+}

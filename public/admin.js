@@ -1,6 +1,6 @@
 import { online, getFb } from "/firebase.js";
 import { watchCount, watchStars, resetCount } from "/counter.js";
-import { DEFAULT, SCHEMA, FONTS, getPath, setPath, loadConfig, saveConfig } from "/config.js";
+import { DEFAULT, SCHEMA, FONTS, getPath, setPath, loadConfig, saveConfig, uploadBg } from "/config.js";
 
 const $ = (id) => document.getElementById(id);
 const show = (el, on) => (el.hidden = !on);
@@ -60,6 +60,18 @@ function input([path, label, type, min, max, step]) {
   if (type === "color") { el.type = "color"; el.value = val; el.oninput = () => set(el.value); }
   if (type === "bool") { el.type = "checkbox"; el.checked = val; el.onchange = () => set(el.checked); }
   if (type === "num") { Object.assign(el, { type: "number", min, max, step: step || 1, value: val }); el.oninput = () => el.value !== "" && set(+el.value); }
+  if (type === "image") {
+    Object.assign(el, { type: "file", accept: "image/*" });
+    el.onchange = async () => {
+      try {
+        const ratio = await uploadBg(el.files[0]);
+        setPath(cfg, "look.bgUrl", "firestore");
+        setPath(cfg, "look.bgRatio", +ratio.toFixed(3));
+        renderForm();
+        toast("อัปโหลดแล้ว ✓ ตั้งสัดส่วนให้แล้ว เช็กตำแหน่งโลโก้/ยอดวัดแล้วกดบันทึก");
+      } catch (e) { toast("อัปโหลดไม่ได้: " + e.message); }
+    };
+  }
   if (type === "font") {
     el.innerHTML = FONTS.map((f) => `<option${f === val ? " selected" : ""}>${f}</option>`).join("");
     el.onchange = () => set(el.value);
@@ -115,7 +127,7 @@ function gate(msg, { form = false, claim = false } = {}) {
 }
 
 async function openEditor() {
-  cfg = await loadConfig();
+  cfg = await loadConfig(false);
   renderForm();
   renderCount(last);
   show($("gate"), false);
@@ -135,7 +147,7 @@ async function onUser(user) {
 
 async function main() {
   if (!online) return gate("ยังไม่ได้ตั้งค่า Firebase (ดูได้เฉพาะตัวนับในเครื่อง)");
-  loadConfig().then((c) => { cfg = c; renderCount(last); });
+  loadConfig(false).then((c) => { cfg = c; renderCount(last); });
   gate("เข้าสู่ระบบเพื่อแก้ไขการตั้งค่า", { form: true }); // แสดงฟอร์มไว้ก่อน ไม่ต้องรอเช็กสถานะล็อกอิน
   const fb = await getFb();
   fb.onAuthStateChanged(fb.auth, onUser);

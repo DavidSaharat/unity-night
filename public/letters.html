@@ -15,15 +15,22 @@
   <canvas id="fx"></canvas>
 
   <main>
-    <section class="stage on" id="st-write">
+    <section class="stage on" id="st-welcome">
+      <img class="logo" alt="" hidden>
+      <h1 class="finish-text" id="welcomeText"></h1>
+    </section>
+
+    <section class="stage" id="st-write">
       <img class="logo" alt="" hidden>
       <h2 class="write-title" id="writeTitle"></h2>
       <div class="paper" id="paper">
         <textarea id="msg" rows="6" autocomplete="off" spellcheck="false"></textarea>
         <div class="count" id="count"></div>
         <button class="handle" id="handle" type="button">
+          <svg class="chev c0" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <svg class="chev c1" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <svg class="chev c2" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="chev c3" viewBox="0 0 24 24" width="26" height="26"><path d="M5 15l7-7 7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <span id="hint"></span>
         </button>
       </div>

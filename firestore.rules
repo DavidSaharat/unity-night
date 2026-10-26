@@ -21,7 +21,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    match /site/config {
+    match /site/{doc} {
       allow read: if true;
       allow write: if isAdmin();
     }
